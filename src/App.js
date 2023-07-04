@@ -1,61 +1,33 @@
 import "./App.css";
-import { useState } from "react";
-import { Task } from "./Task"
+import { useState, createContext } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { Home } from "./pages/Home";
+import { Menu } from "./pages/Menu";
+import { Contact } from "./pages/Contact";
+import { Profile } from  "./pages/Profile";
+
+export const AppContext = createContext();
 
 function App() {
-    const [ todoList, setTodoList ] = useState([]);
-    const [ newTask, setNewTask ] = useState("");
+    const [ username, setUsername ] = useState("JackCui");
 
-    const handleChange = (event) => {
-        setNewTask(event.target.value);
-    };
-
-    const addTask = () => {
-        const task = {
-            id: todoList.length === 0 ? 1 : todoList[todoList.length - 1].id + 1,
-            taskName: newTask,
-            completed: false,
-        }
-        setTodoList([...todoList, task]);        
-    }
-
-    const deleteTask = (id) => {
-        setTodoList(todoList.filter((task) => task.id !== id));
-    }
-
-    const completeTask = (id) => {
-        setTodoList(
-            todoList.map((task) => {
-                if(task.id === id) {
-                    return {...task, completed: true};
-                } else {
-                    return task;
-                }
-            })
-        )
-    }
-
-    return(
+    return (
         <div className="App">
-            <div className="addTask">
-                <input onChange={handleChange}/>
-                <button onClick={addTask}> Add Task</button>
-            </div>
-            <div className="list">
-                {todoList.map(( task ) => {
-                    return (
-                        <Task 
-                            taskName={task.taskName} 
-                            id={task.id} 
-                            deleteTask={deleteTask}
-                            completed={task.completed}
-                            completeTask={completeTask}
-                        />
-                    ) 
-                })}
-            </div>
+            <AppContext.Provider value={{ username, setUsername }}>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Home username={username} />} />
+                    <Route 
+                        path="/profile" 
+                        element={<Profile />} 
+                    />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="*" element={<h1>Page not found</h1>}/>
+                </Routes>
+            </Router>
+            </AppContext.Provider>
         </div>
-    );
+    ) 
 }
 
 export default App;
