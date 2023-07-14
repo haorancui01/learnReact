@@ -20,6 +20,7 @@ export const Post = (props: Props) => {
 
             <div className="footer">
                 <p> {post.username} </p>
+                <button> + </button>
             </div>
         </div>
     )
